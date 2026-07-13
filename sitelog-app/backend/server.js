@@ -15,7 +15,7 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB Connected Successfully'))
   .catch(err => console.error('DB Connection Error:', err));
 
-// SCHEMAS (Updated with structured Category field)
+// SCHEMAS
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true }
@@ -23,16 +23,16 @@ const UserSchema = new mongoose.Schema({
 const User = mongoose.model('User', UserSchema);
 
 const LogSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   title: { type: String, required: true },
-  category: { type: String, default: 'Excavation' }, // Added production field
+  category: { type: String, default: 'Excavation' },
   description: { type: String, required: true },
   materialCost: { type: Number, default: 0 },
+  submittedBy: { type: String, default: 'Guest' },
   date: { type: Date, default: Date.now }
 });
 const Log = mongoose.model('Log', LogSchema);
 
-// AUTHENTICATION MIDDLEWARE
+// AUTH MIDDLEWARE
 const auth = (req, res, next) => {
   try {
     const token = req.header('Authorization').replace('Bearer ', '');
@@ -72,10 +72,11 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// PROTECTED ROUTES
+// SHARED PROJECT DATA FEED ROUTES
 app.post('/api/logs', auth, async (req, res) => {
   try {
-    const newLog = new Log({ ...req.body, userId: req.userId });
+    const user = await User.findById(req.userId);
+    const newLog = new Log({ ...req.body, submittedBy: user ? user.username : 'Guest' });
     const savedLog = await newLog.save();
     res.status(201).json(savedLog);
   } catch (err) {
@@ -85,7 +86,7 @@ app.post('/api/logs', auth, async (req, res) => {
 
 app.get('/api/logs', auth, async (req, res) => {
   try {
-    const logs = await Log.find({ userId: req.userId }).sort({ date: -1 });
+    const logs = await Log.find({}).sort({ date: -1 }); // Global shared project feed view
     res.json(logs);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -94,7 +95,7 @@ app.get('/api/logs', auth, async (req, res) => {
 
 app.delete('/api/logs/:id', auth, async (req, res) => {
   try {
-    await Log.findOneAndDelete({ _id: req.params.id, userId: req.userId });
+    await Log.findByIdAndDelete(req.params.id);
     res.json({ message: 'Record removed successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
