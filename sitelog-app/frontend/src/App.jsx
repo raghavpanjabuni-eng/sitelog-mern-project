@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 // LEAVE THIS FOR NOW - We will update this string with your live backend URL later
-const API_URL = 'https://YOUR-BACKEND-URL-HERE.onrender.com/api/logs';
+const API_URL = 'https://sitelog-backend.onrender.com/api/logs';
 
 function App() {
   const [logs, setLogs] = useState([]);
