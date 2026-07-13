@@ -57,7 +57,7 @@ function App() {
         {/* Header Dashboard section */}
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#ffffff', padding: '20px 30px', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
           <div>
-            <h1 style={{ margin: 0, fontSize: '24px', fontWeight: '700', color: '#0f172a' }}>专 SiteLog Dashboard</h1>
+            <h1 style={{ margin: 0, fontSize: '24px', fontWeight: '700', color: '#0f172a' }}>👷 SiteLog Dashboard</h1>
             <p style={{ margin: '4px 0 0 0', color: '#64748b', fontSize: '14px' }}>Construction Daily Management System</p>
           </div>
           <div style={{ textAlign: 'right', backgroundColor: '#eff6ff', padding: '10px 20px', borderRadius: '8px', border: '1px solid #bfdbfe' }}>
@@ -95,6 +95,16 @@ function App() {
                       {new Date(log.date).toLocaleDateString()}
                     </span>
                   </div>
+                  
+                  {/* Dynamic Visual Image Card Integration */}
+                  <div style={{ margin: '14px 0', borderRadius: '8px', overflow: 'hidden', height: '160px', backgroundColor: '#e2e8f0' }}>
+                    <img 
+                      src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=800&q=80" 
+                      alt="Construction Site Layout" 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                    />
+                  </div>
+
                   <p style={{ margin: '0 0 12px 0', color: '#475569', fontSize: '15px', lineHeight: '1.5' }}>{log.description}</p>
                   <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ fontSize: '14px', color: '#64748b' }}>
